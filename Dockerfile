@@ -131,8 +131,8 @@ WORKDIR /app
 # 프로젝트 루트에 있는 파일을 컨테이너 안으로 복사해서 넣기
 COPY . .
 
-# 빌드
-RUN chmod +x ./gradlew && ./gradlew build
+# 빌드 (테스트 스킵 — 테스트들은 실DB/Redis/RabbitMQ 필요한 @SpringBootTest 라 Docker build 네트워크에서 실행 불가)
+RUN chmod +x ./gradlew && ./gradlew bootJar
 
 # 실행만 담당하는 jre 환경으로 설정한다.
 FROM eclipse-temurin:17-jre
