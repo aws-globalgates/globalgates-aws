@@ -63,4 +63,7 @@ dependencies {
 }
 tasks.named('test') {
     useJUnitPlatform()
+    // 배포 빌드에서 테스트 스킵 — @SpringBootTest 들이 실DB/Redis/RabbitMQ 필요해서 Docker build 네트워크에서 못 돌아감.
+    // 테스트는 로컬/별도 CI 잡에서 (실 인프라 띄워놓고) 실행. 다시 켜려면 아래 줄 주석 처리.
+    enabled = false
 }
