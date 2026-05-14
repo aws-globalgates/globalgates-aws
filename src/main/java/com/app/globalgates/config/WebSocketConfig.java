@@ -30,7 +30,7 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
-        // 허용 origin은 application.yaml의 websocket.allowed-origins (콤마 구분, ${WS_ALLOWED_ORIGINS})에서 주입
+        // 허용 origin은 application.yaml의 websocket.allowed-origins (${EC2_HOST} 기반 콤마 구분)에서 주입
         registry.addEndpoint("/ws/chat")
                 .setAllowedOriginPatterns(allowedOrigins)
                 .addInterceptors(handshakeInterceptor)
