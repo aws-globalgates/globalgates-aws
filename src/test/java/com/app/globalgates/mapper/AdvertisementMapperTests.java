@@ -35,13 +35,6 @@ public class    AdvertisementMapperTests {
     }
 
     @Test
-    public void testSelectAll() {
-        List<AdvertisementDTO> foundAds = advertisementMapper.selectAll();
-        log.info("받아온 광고들 : {}", foundAds);
-        log.info("받아온 광고 수: {}", foundAds.size());
-    }
-
-    @Test
     public void testSelectWithSearchAndFilter() {
         AdSearch search = new AdSearch();
         Long memberId = 1L;
