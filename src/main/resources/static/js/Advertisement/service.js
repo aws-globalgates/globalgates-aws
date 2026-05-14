@@ -144,7 +144,7 @@ const advertisementService = (() => {
         const amount = Number(String(budget || "").replace(/[^\d]/g, ""));
         if (!amount || !startedAt) return null;
 
-        // body data-ad-regression-api-url 에서 주입 (env: AD_REGRESSION_API_URL)
+        // body data-ad-regression-api-url 에서 주입 (서버에서 ${EC2_HOST}:${FASTAPI_PORT}/api/ad-regression/predict 조립)
         const endpoint = document.body?.dataset?.adRegressionApiUrl || "";
         const response = await fetch(endpoint, {
             method: "POST",

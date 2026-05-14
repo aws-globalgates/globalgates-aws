@@ -99,7 +99,7 @@ window.onload = () => {
     let pendingVideoRoomName = null;
     let loginedMemberId = null;
 
-    // 1-9. LiveKit 서버 URL — body data-livekit-server-url 에서 주입 (env: LIVEKIT_SERVER_URL)
+    // 1-9. LiveKit 서버 URL — body data-livekit-server-url 에서 주입 (서버에서 ${EC2_HOST}:${LIVEKIT_PORT} 조립)
     function configureLiveKitUrl() {
         if (!LIVEKIT_SERVER_URL) {
             LIVEKIT_SERVER_URL = document.body?.dataset?.livekitServerUrl || "";
