@@ -7,7 +7,7 @@ on:
 
 jobs:
   deploy:
-    if: github.repository == 'aws-globalgates/globalgates-aws
+    if: github.repository == 'aws-globalgates/globalgates-aws'
     runs-on: ubuntu-24.04
 
     strategy:
