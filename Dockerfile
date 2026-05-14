@@ -139,8 +139,8 @@ FROM eclipse-temurin:17-jre
 
 ENV TZ=Asia/Seoul
 
-# JAR 파일 복사
-COPY --from=build /app/build/libs/app-0.0.1-SNAPSHOT.jar app.jar
+# JAR 파일 복사 (settings.gradle 의 rootProject.name='back' → 결과물은 back-*.jar)
+COPY --from=build /app/build/libs/back-0.0.1-SNAPSHOT.jar app.jar
 
 # 포트 오픈
 ARG SERVER_PORT=10000
