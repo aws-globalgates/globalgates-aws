@@ -133,8 +133,6 @@ jobs:
             --build-arg GOOGLE_MAPS_API_KEY="${{ secrets.GOOGLE_MAPS_API_KEY }}" \
             --build-arg KAKAO_MAPS_JS_KEY="${{ secrets.KAKAO_MAPS_JS_KEY }}" \
           -t app .
-          test -r /home/ubuntu/globalgates.pem
-          test -r /home/ubuntu/globalgates-key.pem
           docker run -d -p 80:10000 --name app \
             -v /home/ubuntu/globalgates.pem:/certs/globalgates.pem:ro \
             -v /home/ubuntu/globalgates-key.pem:/certs/globalgates-key.pem:ro \
