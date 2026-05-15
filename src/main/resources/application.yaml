@@ -1,0 +1,117 @@
+server:
+  port: ${SERVER_PORT:10000}
+  servlet:
+    session:
+      tracking-modes: cookie
+  ssl:
+    enabled: true
+    certificate: classpath:key/globalgates.pem
+    certificate-private-key: classpath:key/globalgates-key.pem
+
+spring:
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://${EC2_HOST}:${PSQL_PORT}/${PSQL_DATABASE}?serverTimezone=Asia/Seoul
+    username: ${PSQL_USERNAME}
+    password: ${PSQL_PASSWORD}
+  session:
+    redis:
+      repository-type: indexed
+      flush-mode: immediate
+  data:
+    redis:
+      host: ${EC2_HOST}
+      port: ${REDIS_PORT}
+  rabbitmq:
+    host: ${EC2_HOST}
+    port: ${RABBITMQ_PORT}
+    username: ${RABBITMQ_USERNAME}
+    password: ${RABBITMQ_PASSWORD}
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: ${MAIL_USERNAME}
+    password: "${MAIL_PASSWORD}"
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+
+  cache:
+    type: redis
+
+  profiles:
+    active: local
+    include: oauth
+
+  servlet:
+    multipart:
+      enabled: true
+      file-size-threshold: 10MB
+      max-file-size: 5MB
+      max-request-size: 15MB
+
+mybatis:
+  mapper-locations: classpath*:mapper/**/*.xml
+  type-aliases-package: com.app.globalgates.domain; com.app.globalgates.dto;
+  type-handlers-package: com.app.globalgates.mybatis.handler
+  configuration:
+    map-underscore-to-camel-case: true
+
+# openssl rand -base64 32
+jwt:
+  secret: ${JWT_SECRET}
+
+aws:
+  access-key: ${AWS_ACCESS_KEY}
+  secret-key: ${AWS_SECRET_KEY}
+  s3:
+    bucket-name: ${AWS_BUCKET_NAME}
+  region: ${AWS_REGION}
+
+message:
+  api-key: ${SOLAPI_KEY}
+  api-secret-key: ${SOLAPI_SECRET}
+
+bootpay:
+  application-id: ${BOOTPAY_ID}
+  private-key: ${BOOTPAY_PRIVATEKEY}
+  api-base-url: ${BOOTPAY_APIURL}
+
+# FastAPI ai_contents 서비스 — 영상통화 RAG 백엔드 (Cloudflare Tunnel)
+ai-contents:
+  base-url: ${AI_CONTENTS_BASE_URL}
+
+# Spring → FastAPI 내부 호출 검증용 사전 공유 토큰
+internal-ai:
+  token: ${INTERNAL_AI_TOKEN}
+
+# Frontend에서 사용하는 지도 SDK 키 (GH Actions Secret 주입)
+google:
+  maps:
+    api-key: ${GOOGLE_MAPS_API_KEY}
+
+kakao:
+  maps:
+    js-key: ${KAKAO_MAPS_JS_KEY}
+
+# 욕설 검사 FastAPI 서버 (광고 회귀 ML과 동일한 FastAPI 인스턴스 → ${FASTAPI_PORT} 공유)
+profanity:
+  api:
+    base-url: http://${EC2_HOST}:${FASTAPI_PORT}
+
+# LiveKit 영상통화 서버
+livekit:
+  server:
+    url: https://${EC2_HOST}:${LIVEKIT_PORT}/token
+
+# 광고 회귀 ML 서버 (FastAPI — profanity와 ${FASTAPI_PORT} 공유)
+ad-regression:
+  api:
+    url: http://${EC2_HOST}:${FASTAPI_PORT}/api/ad-regression/predict
+
+# WebSocket(STOMP) 허용 origin (콤마 구분, 포트는 와일드카드).
+websocket:
+  allowed-origins: https://${EC2_HOST}:*,http://${EC2_HOST}:*
