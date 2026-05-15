@@ -86,17 +86,44 @@ jobs:
 
     - name: Copy project to EC2
       run: |
-        rsync -avz -e "ssh -i ~/.ssh/id_rsa" . ${{ secrets.EC2_USER }}@$HOST:/home/ubuntu/app
+        rsync -az --delete --delete-excluded \
+          --exclude='.git/' \
+          --exclude='.gradle/' \
+          --exclude='build/' \
+          --exclude='out/' \
+          --exclude='.idea/' \
+          --exclude='.vscode/' \
+          --exclude='.claude/' \
+          --exclude='.gstack/' \
+          --exclude='.playwright-mcp/' \
+          --exclude='docs/' \
+          --exclude='mockups/' \
+          --exclude='mockup_ai_chat.html' \
+          --exclude='*.md' \
+          --exclude='*.log' \
+          --exclude='.DS_Store' \
+          --exclude='src/main/resources/key/' \
+          -e "ssh -i ~/.ssh/id_rsa" \
+          ./ ${{ secrets.EC2_USER }}@$HOST:/home/ubuntu/app/
 
     - name: Build & Run Docker on EC2
       run: |
         ssh -i ~/.ssh/id_rsa ${{ secrets.EC2_USER }}@$HOST << EOF
           set -e
           cd /home/ubuntu/app
+          echo "Docker disk usage before cleanup"
+          df -h / /var/lib/docker || true
+          docker system df || true
           docker stop app || true
           docker rm app || true
           docker rmi app || true
-          docker build --build-arg JWT_SECRET="${{ secrets.JWT_SECRET }}" \
+          docker container prune -f || true
+          docker image prune -af || true
+          docker builder prune -af || true
+          echo "Docker disk usage after cleanup"
+          df -h / /var/lib/docker || true
+          docker system df || true
+          DOCKER_BUILDKIT=1 docker build --progress=plain --build-arg JWT_SECRET="${{ secrets.JWT_SECRET }}" \
             --build-arg PSQL_PORT="${{ secrets.PSQL_PORT }}" \
             --build-arg PSQL_DATABASE="${{ secrets.PSQL_DATABASE }}" \
             --build-arg PSQL_USERNAME="${{ secrets.PSQL_USERNAME }}" \
@@ -177,10 +204,14 @@ jobs:
             app
         EOF
 
-    - name: Clean up dangling images
-      if: success()
+    - name: Clean up Docker disk on EC2
+      if: always()
       run: |
-        ssh -i ~/.ssh/id_rsa ${{ secrets.EC2_USER }}@$HOST << 'EOF'
-          docker image prune -f
-          docker container prune -f
+        if [ -n "${HOST:-}" ] && [ -f ~/.ssh/id_rsa ]; then
+          ssh -i ~/.ssh/id_rsa ${{ secrets.EC2_USER }}@$HOST << 'EOF' || true
+            docker container prune -f || true
+            docker image prune -f || true
+            docker builder prune -af || true
+            docker system df || true
         EOF
+        fi

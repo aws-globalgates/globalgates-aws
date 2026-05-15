@@ -15,6 +15,9 @@ out
 .project
 .classpath
 .settings
+.claude
+.gstack
+.playwright-mcp
 
 # OS
 .DS_Store
@@ -22,6 +25,8 @@ Thumbs.db
 
 # Docs / 이미지 (런타임 불필요)
 docs
+mockups
+mockup_ai_chat.html
 *.md
 
 # 로컬 인증서 (gitignore 되어있지만 혹시 모를 안전장치)
