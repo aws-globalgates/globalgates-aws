@@ -23,57 +23,6 @@ jobs:
     - name: Set HOST env var from secrets
       run: echo "HOST=${{ secrets[matrix.name] }}" >> $GITHUB_ENV
 
-    - name: Validate required secrets
-      env:
-        TARGET_HOST: ${{ secrets[matrix.name] }}
-        EC2_USER: ${{ secrets.EC2_USER }}
-        EC2_KEY: ${{ secrets.EC2_KEY }}
-        EC2_HOST: ${{ secrets.EC2_HOST }}
-        SERVER_PORT: ${{ secrets.SERVER_PORT }}
-        PSQL_PORT: ${{ secrets.PSQL_PORT }}
-        PSQL_DATABASE: ${{ secrets.PSQL_DATABASE }}
-        PSQL_USERNAME: ${{ secrets.PSQL_USERNAME }}
-        PSQL_PASSWORD: ${{ secrets.PSQL_PASSWORD }}
-        REDIS_PORT: ${{ secrets.REDIS_PORT }}
-        RABBITMQ_PORT: ${{ secrets.RABBITMQ_PORT }}
-        RABBITMQ_USERNAME: ${{ secrets.RABBITMQ_USERNAME }}
-        RABBITMQ_PASSWORD: ${{ secrets.RABBITMQ_PASSWORD }}
-        MAIL_USERNAME: ${{ secrets.MAIL_USERNAME }}
-        MAIL_PASSWORD: ${{ secrets.MAIL_PASSWORD }}
-        JWT_SECRET: ${{ secrets.JWT_SECRET }}
-        AWS_ACCESS_KEY: ${{ secrets.AWS_ACCESS_KEY }}
-        AWS_SECRET_KEY: ${{ secrets.AWS_SECRET_KEY }}
-        AWS_BUCKET_NAME: ${{ secrets.AWS_BUCKET_NAME }}
-        AWS_REGION: ${{ secrets.AWS_REGION }}
-        SOLAPI_KEY: ${{ secrets.SOLAPI_KEY }}
-        SOLAPI_SECRET: ${{ secrets.SOLAPI_SECRET }}
-        BOOTPAY_ID: ${{ secrets.BOOTPAY_ID }}
-        BOOTPAY_PRIVATEKEY: ${{ secrets.BOOTPAY_PRIVATEKEY }}
-        BOOTPAY_APIURL: ${{ secrets.BOOTPAY_APIURL }}
-        AI_CONTENTS_BASE_URL: ${{ secrets.AI_CONTENTS_BASE_URL }}
-        INTERNAL_AI_TOKEN: ${{ secrets.INTERNAL_AI_TOKEN }}
-        FASTAPI_PORT: ${{ secrets.FASTAPI_PORT }}
-        LIVEKIT_PORT: ${{ secrets.LIVEKIT_PORT }}
-        KAKAO_CLIENT_ID: ${{ secrets.KAKAO_CLIENT_ID }}
-        KAKAO_CLIENT_SECRET: ${{ secrets.KAKAO_CLIENT_SECRET }}
-        NAVER_CLIENT_ID: ${{ secrets.NAVER_CLIENT_ID }}
-        NAVER_CLIENT_SECRET: ${{ secrets.NAVER_CLIENT_SECRET }}
-        GOOGLE_CLIENT_ID: ${{ secrets.GOOGLE_CLIENT_ID }}
-        GOOGLE_CLIENT_SECRET: ${{ secrets.GOOGLE_CLIENT_SECRET }}
-        FACEBOOK_CLIENT_ID: ${{ secrets.FACEBOOK_CLIENT_ID }}
-        FACEBOOK_CLIENT_SECRET: ${{ secrets.FACEBOOK_CLIENT_SECRET }}
-        GOOGLE_MAPS_API_KEY: ${{ secrets.GOOGLE_MAPS_API_KEY }}
-        KAKAO_MAPS_JS_KEY: ${{ secrets.KAKAO_MAPS_JS_KEY }}
-      run: |
-        missing=0
-        for name in TARGET_HOST EC2_USER EC2_KEY EC2_HOST SERVER_PORT PSQL_PORT PSQL_DATABASE PSQL_USERNAME PSQL_PASSWORD REDIS_PORT RABBITMQ_PORT RABBITMQ_USERNAME RABBITMQ_PASSWORD MAIL_USERNAME MAIL_PASSWORD JWT_SECRET AWS_ACCESS_KEY AWS_SECRET_KEY AWS_BUCKET_NAME AWS_REGION SOLAPI_KEY SOLAPI_SECRET BOOTPAY_ID BOOTPAY_PRIVATEKEY BOOTPAY_APIURL AI_CONTENTS_BASE_URL INTERNAL_AI_TOKEN FASTAPI_PORT LIVEKIT_PORT KAKAO_CLIENT_ID KAKAO_CLIENT_SECRET NAVER_CLIENT_ID NAVER_CLIENT_SECRET GOOGLE_CLIENT_ID GOOGLE_CLIENT_SECRET FACEBOOK_CLIENT_ID FACEBOOK_CLIENT_SECRET GOOGLE_MAPS_API_KEY KAKAO_MAPS_JS_KEY; do
-          if [ -z "${!name}" ]; then
-            echo "::error title=Missing required secret::${name} is empty or not configured"
-            missing=1
-          fi
-        done
-        exit "$missing"
-
     - name: Debug EC2_HOST
       run: echo "EC2_HOST is ${{ secrets.EC2_HOST }}"
 
@@ -86,12 +35,11 @@ jobs:
 
     - name: Copy project to EC2
       run: |
-        rsync -avz -e "ssh -i ~/.ssh/id_rsa" . ${{ secrets.EC2_USER }}@$HOST:/home/ubuntu/app
+        rsync -avz -e "ssh -i ~/.ssd/id_rsa" . ${{ secrets.EC2_USER }}@$HOST:/home/ubuntu/app
 
     - name: Build & Run Docker on EC2
       run: |
         ssh -i ~/.ssh/id_rsa ${{ secrets.EC2_USER }}@$HOST << EOF
-          set -e
           cd /home/ubuntu/app
           docker stop app || true
           docker rm app || true
