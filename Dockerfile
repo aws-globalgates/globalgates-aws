@@ -1,3 +1,5 @@
+# syntax=docker/dockerfile:1.7
+
 # 빌드 할 때에는 jdk 17버전을 사용하겠다.
 FROM eclipse-temurin:17-jdk AS build
 
@@ -128,11 +130,18 @@ ENV KAKAO_MAPS_JS_KEY=${KAKAO_MAPS_JS_KEY}
 # 작업 디렉토리 설정
 WORKDIR /app
 
-# 프로젝트 루트에 있는 파일을 컨테이너 안으로 복사해서 넣기
-COPY . .
+# Gradle wrapper와 빌드 정의를 먼저 복사해서 의존성 캐시 재사용률을 높인다.
+COPY gradlew build.gradle settings.gradle ./
+COPY gradle ./gradle
+RUN chmod +x ./gradlew
 
-# 빌드 (테스트 비활성화는 build.gradle 의 test task 에서 처리)
-RUN chmod +x ./gradlew && ./gradlew build
+# 프로젝트 소스 복사 후 빌드 (테스트 비활성화는 build.gradle 의 test task 에서 처리)
+COPY src ./src
+
+# Gradle 캐시는 이미지 레이어가 아니라 BuildKit 캐시에만 둔다.
+RUN --mount=type=cache,target=/root/.gradle \
+    --mount=type=cache,target=/app/.gradle \
+    ./gradlew --no-daemon build
 
 # 실행만 담당하는 jre 환경으로 설정한다.
 FROM eclipse-temurin:17-jre
