@@ -160,8 +160,11 @@ jobs:
             --build-arg GOOGLE_MAPS_API_KEY="${{ secrets.GOOGLE_MAPS_API_KEY }}" \
             --build-arg KAKAO_MAPS_JS_KEY="${{ secrets.KAKAO_MAPS_JS_KEY }}" \
           -t app .
-          docker run -d -p "127.0.0.1:${{ secrets.SERVER_PORT }}:${{ secrets.SERVER_PORT }}" --name app \
-            -e SERVER_SSL_ENABLED=false \
+          docker run -d -p 80:10000 --name app \
+            -v /home/ubuntu/globalgates.pem:/certs/globalgates.pem:ro \
+            -v /home/ubuntu/globalgates-key.pem:/certs/globalgates-key.pem:ro \
+            -e SERVER_SSL_CERTIFICATE=file:/certs/globalgates.pem \
+            -e SERVER_SSL_CERTIFICATE_PRIVATE_KEY=file:/certs/globalgates-key.pem \
             -e JWT_SECRET="${{ secrets.JWT_SECRET }}" \
             -e PSQL_PORT="${{ secrets.PSQL_PORT }}" \
             -e PSQL_DATABASE="${{ secrets.PSQL_DATABASE }}" \
