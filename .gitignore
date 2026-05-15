@@ -28,7 +28,6 @@ out/
 !**/src/test/**/out/
 !src/main/resources/application.yaml
 !src/main/resources/application-oauth.yaml
-*.pem
 
 ### NetBeans ###
 /nbproject/private/
