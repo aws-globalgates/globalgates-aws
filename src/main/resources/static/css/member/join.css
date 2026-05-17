@@ -759,6 +759,15 @@ body {
         padding: 16px 20px;
         background: #fff;
     }
+
+    /* 모바일에서 회원가입/로그인 모달은 슬라이드업된 .join-panel(z-index:1100) 위에 떠야
+       입력칸 클릭이 가능하다. splash 파도/Global Gates 배경은 모달 백드롭을 옅게 두어 그대로 비치게 한다. */
+    .join-flow-modal {
+        z-index: 1200;
+    }
+    .join-flow-modal .join-modal-all {
+        background: rgba(15, 20, 25, 0.32);
+    }
 }
 
 

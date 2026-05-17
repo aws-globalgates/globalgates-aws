@@ -3,6 +3,10 @@ server:
   servlet:
     session:
       tracking-modes: cookie
+  # Nginx가 SSL 종료 후 HTTP로 프록시하므로,
+  # Spring이 X-Forwarded-* 헤더를 신뢰하게 만들어야
+  # OAuth redirect URL이나 Location 헤더가 https://globalgates.ai.kr 로 올바르게 만들어진다.
+  forward-headers-strategy: framework
 
 spring:
   datasource:

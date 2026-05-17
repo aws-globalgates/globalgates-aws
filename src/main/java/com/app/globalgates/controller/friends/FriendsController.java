@@ -61,6 +61,6 @@ public class FriendsController {
             model.addAttribute("followingsCount", followingsCount);
         } catch (Exception ignored) {}
 
-        return "Friends/Friends";
+        return "friends/friends";
     }
 }

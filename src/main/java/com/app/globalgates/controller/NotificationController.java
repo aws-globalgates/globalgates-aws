@@ -47,6 +47,6 @@ public class NotificationController {
         }
 
         model.addAttribute("memberId", memberId);
-        return "Notification/Notification";
+        return "notification/notification";
     }
 }

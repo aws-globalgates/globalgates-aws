@@ -3,7 +3,6 @@ package com.app.globalgates.config;
 import com.app.globalgates.auth.websocket.WebSocketAuthHandshakeInterceptor;
 import com.app.globalgates.auth.websocket.WebSocketChannelInterceptor;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.messaging.simp.config.ChannelRegistration;
 import org.springframework.messaging.simp.config.MessageBrokerRegistry;
@@ -19,9 +18,6 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
     private final WebSocketAuthHandshakeInterceptor handshakeInterceptor;
     private final WebSocketChannelInterceptor channelInterceptor;
 
-    @Value("${websocket.allowed-origins}")
-    private String[] allowedOrigins;
-
     @Override
     public void configureMessageBroker(MessageBrokerRegistry config) {
         config.enableSimpleBroker("/topic");
@@ -30,9 +26,16 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
-        // 허용 origin은 application.yaml의 websocket.allowed-origins (${EC2_HOST} 기반 콤마 구분)에서 주입
+        // 운영 도메인이 추가되면 아래 패턴에 명시할 것 — 와일드카드 "*" 금지
         registry.addEndpoint("/ws/chat")
-                .setAllowedOriginPatterns(allowedOrigins)
+                .setAllowedOriginPatterns(
+                        "https://localhost:*",
+                        "http://localhost:*",
+                        "https://127.0.0.1:*",
+                        "http://127.0.0.1:*",
+                        "https://globalgates.ai.kr",
+                        "https://*.globalgates.ai.kr"
+                )
                 .addInterceptors(handshakeInterceptor)
                 .withSockJS();
     }
