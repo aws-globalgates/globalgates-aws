@@ -48,23 +48,26 @@ CREATE TABLE tbl_file (
 
 -- tbl_member
 CREATE TABLE tbl_member (
-    id               bigint        GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-    member_name      varchar(255),
-    member_email     varchar(255)  NOT NULL UNIQUE,
-    member_password  varchar(255),
-    member_nickname  varchar(255),
-    member_handle    varchar(255)  UNIQUE NOT NULL,
-    member_phone     varchar(255),
-    member_bio       text,
-    member_region    varchar(255),
-    member_status    member_status NOT NULL DEFAULT 'active',
-    member_role      member_role   NOT NULL DEFAULT 'business',
-    push_enabled     boolean       NOT NULL DEFAULT true,
-    website_url      varchar(255),
-    birth_date       varchar(255),
-    created_datetime timestamp     NOT NULL DEFAULT now(),
-    updated_datetime timestamp     NOT NULL DEFAULT now(),
-    last_login_at    timestamp
+    id                    bigint        GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    member_name           varchar(255),
+    member_email          varchar(255)  NOT NULL UNIQUE,
+    member_password       varchar(255),
+    member_nickname       varchar(255),
+    member_handle         varchar(255)  UNIQUE NOT NULL,
+    member_phone          varchar(255),
+    member_bio            text,
+    member_region         varchar(255),
+    member_status         member_status NOT NULL DEFAULT 'active',
+    member_role           member_role   NOT NULL DEFAULT 'business',
+    push_enabled          boolean       NOT NULL DEFAULT true,
+    website_url           varchar(255),
+    birth_date            varchar(255),
+    created_datetime      timestamp     NOT NULL DEFAULT now(),
+    updated_datetime      timestamp     NOT NULL DEFAULT now(),
+    last_login_at         timestamp,
+    member_language       varchar(255),
+    member_country        varchar(255),
+    member_login_verified boolean       DEFAULT true
 );
 
 -- tbl_category
