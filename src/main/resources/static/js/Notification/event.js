@@ -3125,7 +3125,7 @@ window.onload = function () {
                 name: "상품 이름 1",
                 price: "₩50,000",
                 stock: "100개",
-                image: "../../static/images/main/global-gates-logo.png",
+                image: "/images/main/global-gates-logo.png",
                 tags: ["#부품", "#전자"]
             },
             {
@@ -3133,7 +3133,7 @@ window.onload = function () {
                 name: "상품 이름 2",
                 price: "₩30,000",
                 stock: "50개",
-                image: "../../static/images/main/global-gates-logo.png",
+                image: "/images/main/global-gates-logo.png",
                 tags: ["#부품", "#기계"]
             },
             {
@@ -3141,7 +3141,7 @@ window.onload = function () {
                 name: "상품 이름 3",
                 price: "₩80,000",
                 stock: "200개",
-                image: "../../static/images/main/global-gates-logo.png",
+                image: "/images/main/global-gates-logo.png",
                 tags: ["#부품", "#소재"]
             },
         ];

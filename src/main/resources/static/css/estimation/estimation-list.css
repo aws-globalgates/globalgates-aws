@@ -1,4 +1,4 @@
-@import url("../Inquiry/inquiry_active_list.css");
+@import url("../inquiry/inquiry_active_list.css");
 
 body.modal-open {
     overflow: hidden;
