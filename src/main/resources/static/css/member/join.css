@@ -768,6 +768,13 @@ body {
     .join-flow-modal .join-modal-all {
         background: rgba(15, 20, 25, 0.32);
     }
+
+    /* 모달이 열려 있는 동안에는 슬라이드업된 패널을 다시 화면 밖으로 내려서
+       입력 모달만 단독으로 보이게 한다. 모달이 닫히면 panel-revealed 가 살아 있으므로
+       패널이 자동 복귀한다. */
+    body.flow-modal-open.panel-revealed .join-panel {
+        transform: translateY(100%);
+    }
 }
 
 
