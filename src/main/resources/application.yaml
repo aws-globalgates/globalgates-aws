@@ -104,20 +104,20 @@ kakao:
   maps:
     js-key: ${KAKAO_MAPS_JS_KEY}
 
-# 욕설 검사 FastAPI 서버 (광고 회귀 ML과 동일한 FastAPI 인스턴스 → ${FASTAPI_PORT} 공유)
+# 욕설 검사 FastAPI 서버 (ai-contents 인스턴스 공유, Cloudflare Tunnel)
 profanity:
   api:
-    base-url: http://${EC2_HOST}:${FASTAPI_PORT}
+    base-url: ${AI_CONTENTS_BASE_URL}
 
 # LiveKit 영상통화 서버
 livekit:
   server:
     url: https://${EC2_HOST}:${LIVEKIT_PORT}/token
 
-# 광고 회귀 ML 서버 (FastAPI — profanity와 ${FASTAPI_PORT} 공유)
+# 광고 회귀 ML 서버 (ai-contents 인스턴스 공유, Cloudflare Tunnel)
 ad-regression:
   api:
-    url: http://${EC2_HOST}:${FASTAPI_PORT}/api/ad-regression/predict
+    url: ${AI_CONTENTS_BASE_URL}/api/ad-regression/predict
 
 # WebSocket(STOMP) 허용 origin (콤마 구분, 포트는 와일드카드).
 websocket:
