@@ -826,28 +826,6 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
 .search-input-wrap input::placeholder { color: #536471; }
 .search-input-wrap svg { fill: #536471; }
 
-/* ===== FAB ===== */
-.communityFab {
-  position: fixed;
-  bottom: 24px;
-  right: 16px;
-  z-index: 50;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 56px;
-  height: 56px;
-  border: none;
-  border-radius: 50%;
-  background: #1d9bf0;
-  color: #ffffff;
-  cursor: pointer;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-  transition: background-color 0.2s;
-}
-.communityFab:hover { background: #1a8cd8; }
-.communityFab svg { fill: currentColor; }
-
 /* ===== layers / 드롭다운 ===== */
 .layers-overlay {
   position: fixed;

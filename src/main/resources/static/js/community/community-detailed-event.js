@@ -689,9 +689,6 @@ window.onload = () => {
 
   // ===== Global document click =====
   document.addEventListener('click', (e) => {
-    // FAB 버튼 → header 게시하기 버튼 시뮬레이션 → 공용 compose-modal 열림.
-    if (e.target.closest('[data-compose]')) { e.preventDefault(); document.getElementById("createPostButton")?.click(); return; }
-
     const likeBtn = e.target.closest('.tweet-action-btn--like');
     if (likeBtn && !likeBtn.closest('[data-community-detail-reply-modal]')) {
       e.stopPropagation();

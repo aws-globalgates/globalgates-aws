@@ -67,7 +67,7 @@ const CommunityLayout = {
             <div class="postBody">
                 <header class="postHeader">
                     <div class="postIdentity">
-                        <div class="postAvatar" data-profile-id="${post.memberId}">
+                        <div class="postAvatar postAvatar--image" data-profile-id="${post.memberId}">
                             <img class="postAvatarImage" src="${post.memberProfileFileName || '/images/profile/default_image.png'}" alt="" onerror="this.src='/images/profile/default_image.png'">
                         </div>
                         <div class="postIdentity__copy">
