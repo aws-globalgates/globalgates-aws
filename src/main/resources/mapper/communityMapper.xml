@@ -95,6 +95,7 @@
 
     <sql id="postColumns">
         p.id, p.member_id, p.title as post_title, p.content as post_content,
+        p.post_read_count,
         p.created_datetime, p.updated_datetime, p.community_id,
         m.member_name as member_nickname, m.member_handle,
         (select f.file_path from tbl_member_profile_file mpf
