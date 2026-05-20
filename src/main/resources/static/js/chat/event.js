@@ -1584,7 +1584,11 @@ window.onload = () => {
             if (subs.reaction) subs.reaction.unsubscribe();
         });
         roomSubscriptions.clear();
-        if (stompClient && stompClient.connected) {
+        // connected 여부와 무관하게 disconnect 시도.
+        // connecting 단계에서 stuck한 client를 cleanup 하지 않으면 백그라운드에
+        // leak 되어 늦게 connect 콜백이 발사된 뒤 같은 destination에 추가
+        // subscribe 가 누적되어 메시지가 N배로 수신된다.
+        if (stompClient) {
             try { stompClient.disconnect(); } catch (e) { /* ignore */ }
         }
         stompClient = null;
@@ -1596,14 +1600,24 @@ window.onload = () => {
         disconnectExistingSocket();
 
         const socket = new SockJS("/ws/chat");
-        stompClient = Stomp.over(socket);
-        stompClient.debug = null;
-        stompClient.connect({}, () => {
+        const client = Stomp.over(socket);
+        stompClient = client;
+        client.debug = null;
+        client.connect({}, () => {
+            // connect 콜백이 발사된 시점에 새로운 connect가 stompClient를
+            // 이미 덮어썼다면, 이 client는 폐기 대상이다. 그대로 subscribe 하면
+            // 두 client 가 동일 destination 에 중복 subscribe 되어 메시지가
+            // 두 번씩 수신된다.
+            if (stompClient !== client) {
+                try { client.disconnect(); } catch (e) { /* ignore */ }
+                return;
+            }
             syncStageOneRoomSubscriptions();
             if (pendingSubscriptionRoomId) subscribeStageOneRoom(pendingSubscriptionRoomId);
             subscribeUserRestore();
             subscribeVideoCallEvents();
         }, (error) => {
+            if (stompClient !== client) return;
             console.error("채팅 소켓 연결 실패", error);
             clearTimeout(socketReconnectTimer);
             socketReconnectTimer = setTimeout(connectStageOneSocket, CONFIG.SOCKET_RETRY_DELAY);
@@ -1795,9 +1809,17 @@ window.onload = () => {
     function appendStageOneMessage(message, { refreshRoomList = true, scroll = true } = {}) {
         if (!chatMessageList) return;
 
-        const messageItem = document.createElement("li");
         const isMine = Number(message.senderId) === currentMemberId;
         const messageId = message.id || Date.now();
+
+        // 같은 messageId가 이미 그려져 있으면 중복 append 금지.
+        // WebSocket 다중 구독, 다중 인스턴스 fan-out, reconnect 콜백 재실행 등
+        // 어떤 경로로 동일 이벤트가 두 번 이상 들어와도 화면에는 한 번만 표시한다.
+        if (message.id && chatMessageList.querySelector(`[data-message-id="${messageId}"]`)) {
+            return;
+        }
+
+        const messageItem = document.createElement("li");
         const safeContent = escapeStageOneHtml(message.content || "");
         const timeText = ChatLayout.formatMessageTime(message.createdDatetime || new Date().toISOString());
         const msgTime = message.createdDatetime || new Date().toISOString();
