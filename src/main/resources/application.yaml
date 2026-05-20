@@ -121,4 +121,4 @@ ad-regression:
 
 # WebSocket(STOMP) 허용 origin (콤마 구분, 포트는 와일드카드).
 websocket:
-  allowed-origins: https://${EC2_HOST}:*,http://${EC2_HOST}:*
+  allowed-origins: https://${EC2_HOST}:*, http://${EC2_HOST}:*
