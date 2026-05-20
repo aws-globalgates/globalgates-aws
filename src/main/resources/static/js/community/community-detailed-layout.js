@@ -90,7 +90,7 @@ const CommunityDetailLayout = {
             <div class="postBody">
                 <header class="postHeader">
                     <div class="postIdentity">
-                        <div class="postAvatar">
+                        <div class="postAvatar postAvatar--image">
                             <img class="postAvatarImage" src="${post.memberProfileFileName || '/images/profile/default_image.png'}" alt="" onerror="this.src='/images/profile/default_image.png'">
                         </div>
                         <div class="postIdentity__copy">
